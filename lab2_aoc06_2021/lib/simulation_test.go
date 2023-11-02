@@ -1,4 +1,4 @@
-package lanternfish
+package lib
 
 import "testing"
 
