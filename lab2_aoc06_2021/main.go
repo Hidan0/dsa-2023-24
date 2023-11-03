@@ -23,9 +23,8 @@ func main() {
 		fmt.Println("Error parsing file:", err)
 	}
 
-	fmt.Println("Initial state:", sim.PrintState())
-	sim.Steps(80)
-	fmt.Println("Total fishes after 80 days: ", sim.TotalFishes())
+	sim.Steps(256)
+	fmt.Println("Total fishes after 256 days: ", sim.TotalFishes())
 }
 
 func parseInput(r io.Reader) (*lib.Simulation, error) {

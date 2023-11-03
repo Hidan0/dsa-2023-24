@@ -1,28 +1,46 @@
 package lib
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
+
+func TestInitialPrintState(t *testing.T) {
+	s := NewSimulation([]int{3, 4, 3, 1, 2})
+	want := []string{"(1 * 1)", "(1 * 2)", "(2 * 3)", "(1 * 4)"}
+
+	res := s.PrintState()
+	for _, sub := range want {
+		if !strings.Contains(res, sub) {
+			t.Errorf("PrintState() = %v, does not contains %v", res, sub)
+		}
+	}
+}
 
 func TestOneStep(t *testing.T) {
 	s := NewSimulation([]int{3, 4, 3, 1, 2})
-	want := "2,3,2,0,1"
+	want := []string{"(1 * 0)", "(1 * 1)", "(2 * 2)", "(1 * 3)"}
 
 	s.NextStep()
-
-	if s.PrintState() != want {
-		t.Errorf("NextStep() = %v, want %v", s.PrintState(), want)
+	res := s.PrintState()
+	for _, sub := range want {
+		if !strings.Contains(res, sub) {
+			t.Errorf("PrintState() = %v, does not contains %v", res, sub)
+		}
 	}
 }
 
 func TestThreeSteps(t *testing.T) {
 	s := NewSimulation([]int{3, 4, 3, 1, 2})
-	want := "0,1,0,5,6,7,8"
+	want := []string{"(2 * 0)", "(1 * 1)", "(1 * 5)", "(1 * 6)", "(1 * 7)", "(1 * 8)"}
 
-	s.NextStep()
-	s.NextStep()
-	s.NextStep()
+	s.Steps(3)
 
-	if s.PrintState() != want {
-		t.Errorf("NextStep() = %v, want %v", s.PrintState(), want)
+	res := s.PrintState()
+	for _, sub := range want {
+		if !strings.Contains(res, sub) {
+			t.Errorf("PrintState() = %v, does not contains %v", res, sub)
+		}
 	}
 }
 

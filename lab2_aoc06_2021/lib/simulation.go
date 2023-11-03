@@ -1,37 +1,49 @@
 package lib
 
 import (
-	"strconv"
-	"strings"
+	"fmt"
 )
 
 type Simulation struct {
-	f []int
+	f map[int]int
+}
+
+func addOr(m *map[int]int, at int, amount int, or int) {
+	if (*m)[at] == 0 {
+		(*m)[at] = or
+	} else {
+		(*m)[at] += amount
+	}
 }
 
 func NewSimulation(initial []int) Simulation {
-	return Simulation{f: initial}
+	var fishes map[int]int = make(map[int]int)
+
+	for _, fish := range initial {
+		addOr(&fishes, fish, 1, 1)
+	}
+
+	return Simulation{f: fishes}
 }
 
 const INITIAL_FISH = 6
 const NEW_FISH = 8
 
-func (s *Simulation) updateFishAt(i int) {
-	fish := &(s.f[i])
-
-	(*fish)--
-
-	if *fish < 0 {
-		*fish = INITIAL_FISH
-		s.f = append(s.f, NEW_FISH)
-	}
-
-}
-
 func (s *Simulation) NextStep() {
-	for i := range s.f {
-		s.updateFishAt(i)
+	var newF map[int]int = make(map[int]int)
+
+	for age, amount := range s.f {
+		age--
+
+		if age < 0 {
+			addOr(&newF, INITIAL_FISH, amount, amount)
+			addOr(&newF, NEW_FISH, amount, amount)
+		} else {
+			addOr(&newF, age, amount, amount)
+		}
 	}
+
+	s.f = newF
 }
 
 func (s *Simulation) Steps(stp int) {
@@ -41,15 +53,21 @@ func (s *Simulation) Steps(stp int) {
 }
 
 func (s *Simulation) PrintState() string {
-	var str []string
+	var out string = ""
 
-	for _, fish := range s.f {
-		str = append(str, strconv.Itoa(fish))
+	for age, amount := range s.f {
+		out += fmt.Sprintf("(%d * %d)", amount, age)
 	}
 
-	return strings.Join(str, ",")
+	return out
 }
 
 func (s *Simulation) TotalFishes() int {
-	return len(s.f)
+	tot := 0
+
+	for _, amount := range s.f {
+		tot += amount
+	}
+
+	return tot
 }
