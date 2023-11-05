@@ -18,4 +18,7 @@ func main() {
 	paper.Fold()
 
 	fmt.Println(paper.VisiblePoints())
+
+	paper.FoldAll()
+	fmt.Println(paper.Print())
 }

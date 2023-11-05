@@ -122,3 +122,35 @@ func (p *TPaper) FoldAll() {
 func (p *TPaper) VisiblePoints() int {
 	return len(p.points)
 }
+
+func (p *TPaper) FindPt(x, y int) string {
+	for _, pt := range p.points {
+		if pt.x == x && pt.y == y {
+			return "#"
+		}
+	}
+	return "."
+}
+
+func (p *TPaper) Print() string {
+	out := ""
+	maxX, maxY := 0, 0
+
+	for _, pt := range p.points {
+		if pt.x > maxX {
+			maxX = pt.x
+		}
+		if pt.y > maxY {
+			maxY = pt.y
+		}
+	}
+
+	for y := 0; y <= maxY; y++ {
+		for x := 0; x <= maxX; x++ {
+			out += p.FindPt(x, y)
+		}
+		out += "\n"
+	}
+
+	return out
+}
