@@ -72,6 +72,53 @@ func InitPaper(r io.Reader) *TPaper {
 	return &TPaper{p, cmd}
 }
 
+func abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
+}
+
+func appendUnique(p *[]point, pt point) {
+	for _, p := range *p {
+		if p.x == pt.x && p.y == pt.y {
+			return
+		}
+	}
+	*p = append(*p, pt)
+}
+
 func (p *TPaper) Fold() {
-	fmt.Println("FOLD")
+	if len(p.cmd) <= 0 {
+		return
+	}
+
+	cmd := p.cmd[0]
+	p.cmd = p.cmd[1:]
+
+	newPts := []point{}
+
+	if cmd.op == 'x' {
+		for _, pt := range p.points {
+			newX := cmd.coord - abs(pt.x-cmd.coord)
+			appendUnique(&newPts, point{newX, pt.y})
+		}
+	} else if cmd.op == 'y' {
+		for _, pt := range p.points {
+			newY := cmd.coord - abs(pt.y-cmd.coord)
+			appendUnique(&newPts, point{pt.x, newY})
+		}
+	}
+
+	p.points = newPts
+}
+
+func (p *TPaper) FoldAll() {
+	for len(p.cmd) > 0 {
+		p.Fold()
+	}
+}
+
+func (p *TPaper) VisiblePoints() int {
+	return len(p.points)
 }

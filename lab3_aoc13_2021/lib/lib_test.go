@@ -5,8 +5,7 @@ import (
 	"testing"
 )
 
-func TestExample(t *testing.T) {
-	input := `6,10
+const INPUT = `6,10
 0,14
 9,10
 0,3
@@ -28,7 +27,26 @@ func TestExample(t *testing.T) {
 fold along y=7
 fold along x=5`
 
-	paper := InitPaper(strings.NewReader(input))
-
+func TestOneFold(t *testing.T) {
+	paper := InitPaper(strings.NewReader(INPUT))
 	paper.Fold()
+
+	want := 17
+	res := paper.VisiblePoints()
+
+	if res != want {
+		t.Errorf("VisiblePoints() = %d, want %d", res, want)
+	}
+}
+
+func TestFoldAll(t *testing.T) {
+	paper := InitPaper(strings.NewReader(INPUT))
+	paper.FoldAll()
+
+	want := 16
+	res := paper.VisiblePoints()
+
+	if res != want {
+		t.Errorf("VisiblePoints() = %d, want %d", res, want)
+	}
 }
