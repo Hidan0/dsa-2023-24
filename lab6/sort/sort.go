@@ -2,6 +2,7 @@ package sort
 
 import (
 	"fmt"
+	"lab6/utils"
 	"log"
 )
 
@@ -40,6 +41,26 @@ func InsertionSort() []int {
 			arr = append(arr, num)
 			continue
 		}
+	}
+	return arr
+}
+
+func findMax(arr *[]int, from, to int) int {
+	max := from
+
+	for i := from; i < to; i++ {
+		if (*arr)[i] > (*arr)[max] {
+			max = i
+		}
+	}
+
+	return max
+}
+
+func IterativeSelectionSort(arr []int) []int {
+	for k := len(arr) - 1; k >= 1; k-- {
+		max := findMax(&arr, 0, k+1)
+		utils.Swap(&arr, k, max)
 	}
 	return arr
 }

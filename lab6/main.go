@@ -7,8 +7,6 @@ import (
 )
 
 func main() {
-	arr := utils.RandomArray(10, 123456)
-	fmt.Printf("%v\n", arr)
-	arr = sort.InsertionSort()
+	arr := sort.IterativeSelectionSort(utils.RandomArray(10, 123456))
 	fmt.Printf("%v\n", arr)
 }

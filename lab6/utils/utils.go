@@ -34,3 +34,9 @@ func RandomArray(n int, seed int64) []int {
 
 	return out
 }
+
+func Swap(a *[]int, from, to int) {
+	tmp := (*a)[from]
+	(*a)[from] = (*a)[to]
+	(*a)[to] = tmp
+}
