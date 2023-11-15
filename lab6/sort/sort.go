@@ -64,3 +64,16 @@ func IterativeSelectionSort(arr []int) []int {
 	}
 	return arr
 }
+
+func RecursiveSelectionSort(arr []int) []int {
+	return selectionSort(arr, 0, len(arr))
+}
+
+func selectionSort(arr []int, from, to int) []int {
+	if from >= to {
+		return arr
+	}
+	max := findMax(&arr, from, to)
+	utils.Swap(&arr, max, to-1)
+	return selectionSort(arr, from, to-1)
+}

@@ -9,4 +9,6 @@ import (
 func main() {
 	arr := sort.IterativeSelectionSort(utils.RandomArray(10, 123456))
 	fmt.Printf("%v\n", arr)
+	arr = sort.RecursiveSelectionSort(utils.RandomArray(10, 123456))
+	fmt.Printf("%v\n", arr)
 }
