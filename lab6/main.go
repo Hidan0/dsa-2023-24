@@ -8,7 +8,10 @@ import (
 
 func main() {
 	arr := sort.IterativeSelectionSort(utils.RandomArray(10, 123456))
-	fmt.Printf("%v\n", arr)
+	fmt.Printf("IterativeSelectionSort: %v\n", arr)
 	arr = sort.RecursiveSelectionSort(utils.RandomArray(10, 123456))
-	fmt.Printf("%v\n", arr)
+	fmt.Printf("RecursiveSelectionSort: %v\n", arr)
+	arr = utils.RandomArray(10, 123456)
+	sort.MergeSort(&arr)
+	fmt.Printf("MergeSort: %v\n", arr)
 }
