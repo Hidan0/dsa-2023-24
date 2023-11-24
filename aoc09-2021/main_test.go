@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"os"
 	"slices"
 	"strings"
 	"testing"
@@ -50,7 +51,27 @@ func TestLowPoints(t *testing.T) {
 		t.Error(err)
 	}
 
-	want := 15
+	var want uint = 15
+	res := hm.LowPoints()
+
+	if res != want {
+		t.Errorf("LowPoints() = %d, expected %d", res, want)
+	}
+}
+
+func TestLowPointsOnInputFile(t *testing.T) {
+	f, err := os.Open("input.txt")
+	if err != nil {
+		t.Error(err)
+	}
+	defer f.Close()
+
+	hm, err := parseInput(bufio.NewReader(f))
+	if err != nil {
+		t.Error(err)
+	}
+
+	var want uint = 570
 	res := hm.LowPoints()
 
 	if res != want {

@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -27,29 +28,31 @@ func (hm *HeightMap) GetAt(x, y int) uint8 {
 }
 
 func (hm *HeightMap) isLowPoint(target uint8, x, y int) bool {
-	if x > 0 && hm.GetAt(x-1, y) < target {
+	if x > 0 && hm.GetAt(x-1, y) <= target {
 		return false
 	}
-	if x < hm.Width-1 && hm.GetAt(x+1, y) < target {
+	if x < hm.Width-1 && hm.GetAt(x+1, y) <= target {
 		return false
 	}
-	if y > 0 && hm.GetAt(x, y-1) < target {
+	if y > 0 && hm.GetAt(x, y-1) <= target {
 		return false
 	}
-	if y < hm.Height-1 && hm.GetAt(x, y+1) < target {
+	if y < hm.Height-1 && hm.GetAt(x, y+1) <= target {
 		return false
 	}
 
 	return true
 }
 
-func (hm *HeightMap) LowPoints() int {
-	return hm.lowPoints(0)
+func (hm *HeightMap) LowPoints() uint {
+	var out uint = 0
+	hm.lowPoints(0, &out)
+	return out
 }
 
-func (hm *HeightMap) lowPoints(i int) int {
+func (hm *HeightMap) lowPoints(i int, out *uint) {
 	if i >= len(hm.values) {
-		return 0
+		return
 	}
 
 	x := i % hm.Width
@@ -57,12 +60,12 @@ func (hm *HeightMap) lowPoints(i int) int {
 
 	target := hm.GetAt(x, y)
 
-	out := 0
 	if hm.isLowPoint(target, x, y) {
-		out = 1 + int(target)
+		fmt.Printf("Found low point at (%d, %d) with value %d\n", x, y, target)
+		*out += 1 + uint(target)
 	}
 
-	return out + hm.lowPoints(i+1)
+	hm.lowPoints(i+1, out)
 }
 
 func parseInput(reader *bufio.Reader) (*HeightMap, error) {
