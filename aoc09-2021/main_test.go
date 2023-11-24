@@ -37,3 +37,23 @@ func TestParseInput(t *testing.T) {
 		t.Errorf("Values parsed incorrectly, got %v", hm.values)
 	}
 }
+
+func TestLowPoints(t *testing.T) {
+	input := `2199943210
+3987894921
+9856789892
+8767896789
+9899965678`
+
+	hm, err := parseInput(bufio.NewReader(strings.NewReader(input)))
+	if err != nil {
+		t.Error(err)
+	}
+
+	want := 15
+	res := hm.LowPoints()
+
+	if res != want {
+		t.Errorf("LowPoints() = %d, expected %d", res, want)
+	}
+}

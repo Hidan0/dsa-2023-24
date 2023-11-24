@@ -22,6 +22,49 @@ func (hm *HeightMap) Print() {
 	}
 }
 
+func (hm *HeightMap) GetAt(x, y int) uint8 {
+	return hm.values[y*hm.Width+x]
+}
+
+func (hm *HeightMap) isLowPoint(target uint8, x, y int) bool {
+	if x > 0 && hm.GetAt(x-1, y) < target {
+		return false
+	}
+	if x < hm.Width-1 && hm.GetAt(x+1, y) < target {
+		return false
+	}
+	if y > 0 && hm.GetAt(x, y-1) < target {
+		return false
+	}
+	if y < hm.Height-1 && hm.GetAt(x, y+1) < target {
+		return false
+	}
+
+	return true
+}
+
+func (hm *HeightMap) LowPoints() int {
+	return hm.lowPoints(0)
+}
+
+func (hm *HeightMap) lowPoints(i int) int {
+	if i >= len(hm.values) {
+		return 0
+	}
+
+	x := i % hm.Width
+	y := i / hm.Width
+
+	target := hm.GetAt(x, y)
+
+	out := 0
+	if hm.isLowPoint(target, x, y) {
+		out = 1 + int(target)
+	}
+
+	return out + hm.lowPoints(i+1)
+}
+
 func parseInput(reader *bufio.Reader) (*HeightMap, error) {
 	Height := 0
 	Width := -1
@@ -56,6 +99,5 @@ func parseInput(reader *bufio.Reader) (*HeightMap, error) {
 	}
 
 	hm := HeightMap{Width, Height, values}
-
 	return &hm, nil
 }
