@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"errors"
-	"fmt"
 	"strconv"
 	"strings"
 )
@@ -27,7 +26,8 @@ func (hm *HeightMap) GetAt(x, y int) uint8 {
 	return hm.values[y*hm.Width+x]
 }
 
-func (hm *HeightMap) isLowPoint(target uint8, x, y int) bool {
+func (hm *HeightMap) isLowPoint(x, y int) bool {
+	target := hm.GetAt(x, y)
 	if x > 0 && hm.GetAt(x-1, y) <= target {
 		return false
 	}
@@ -44,28 +44,45 @@ func (hm *HeightMap) isLowPoint(target uint8, x, y int) bool {
 	return true
 }
 
-func (hm *HeightMap) LowPoints() uint {
-	var out uint = 0
+func xyFromIdx(idx, width int) (int, int) {
+	return idx % width, idx / width
+}
+
+func (hm *HeightMap) LowPoints() []int {
+	var out []int
+
 	hm.lowPoints(0, &out)
+
 	return out
 }
 
-func (hm *HeightMap) lowPoints(i int, out *uint) {
-	if i >= len(hm.values) {
+func (hm *HeightMap) lowPoints(idx int, lowPts *[]int) {
+	if idx >= len(hm.values) {
 		return
 	}
+	x, y := xyFromIdx(idx, hm.Width)
+	if hm.isLowPoint(x, y) {
+		(*lowPts) = append(*lowPts, idx)
+	}
+	hm.lowPoints(idx+1, lowPts)
+}
 
-	x := i % hm.Width
-	y := i / hm.Width
+func (hm *HeightMap) RiskLevel() uint {
+	lowPoints := hm.LowPoints()
 
-	target := hm.GetAt(x, y)
+	return hm.riskLevel(0, &lowPoints)
+}
 
-	if hm.isLowPoint(target, x, y) {
-		fmt.Printf("Found low point at (%d, %d) with value %d\n", x, y, target)
-		*out += 1 + uint(target)
+func (hm *HeightMap) riskLevel(idx int, lowPoints *[]int) uint {
+	if idx >= len(*lowPoints) {
+		return 0
 	}
 
-	hm.lowPoints(i+1, out)
+	return 1 + uint(hm.values[(*lowPoints)[idx]]) + hm.riskLevel(idx+1, lowPoints)
+}
+
+func (hm *HeightMap) ThreeLargestBasins() uint {
+	return 0
 }
 
 func parseInput(reader *bufio.Reader) (*HeightMap, error) {

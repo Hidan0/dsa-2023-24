@@ -39,7 +39,7 @@ func TestParseInput(t *testing.T) {
 	}
 }
 
-func TestLowPoints(t *testing.T) {
+func TestRiskLevel(t *testing.T) {
 	input := `2199943210
 3987894921
 9856789892
@@ -52,14 +52,14 @@ func TestLowPoints(t *testing.T) {
 	}
 
 	var want uint = 15
-	res := hm.LowPoints()
+	res := hm.RiskLevel()
 
 	if res != want {
-		t.Errorf("LowPoints() = %d, expected %d", res, want)
+		t.Errorf("RiskLevel() = %d, expected %d", res, want)
 	}
 }
 
-func TestLowPointsOnInputFile(t *testing.T) {
+func TestRiskLevelOnInputFile(t *testing.T) {
 	f, err := os.Open("input.txt")
 	if err != nil {
 		t.Error(err)
@@ -72,9 +72,9 @@ func TestLowPointsOnInputFile(t *testing.T) {
 	}
 
 	var want uint = 570
-	res := hm.LowPoints()
+	res := hm.RiskLevel()
 
 	if res != want {
-		t.Errorf("LowPoints() = %d, expected %d", res, want)
+		t.Errorf("RiskLevel() = %d, expected %d", res, want)
 	}
 }
