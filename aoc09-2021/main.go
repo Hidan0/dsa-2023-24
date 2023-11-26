@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"errors"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -82,7 +83,55 @@ func (hm *HeightMap) riskLevel(idx int, lowPoints *[]int) uint {
 }
 
 func (hm *HeightMap) ThreeLargestBasins() uint {
-	return 0
+	lowPoints := hm.LowPoints()
+	var basins []int = make([]int, len(lowPoints)) // each low point has a basin
+	var isInABasin []bool = make([]bool, len(hm.values))
+
+	hm.threeLargestBasins(0, &lowPoints, &basins, &isInABasin)
+
+	slices.Sort(basins)
+
+	return uint(basins[len(basins)-1]) * uint(basins[len(basins)-2]) * uint(basins[len(basins)-3])
+}
+
+func (hm *HeightMap) threeLargestBasins(idx int, lowPoints, basins *[]int, isInABasin *[]bool) {
+	// idx is the same for lowPoints and basins
+	if idx >= len(*lowPoints) {
+		return
+	}
+
+	// for each low point find its basin
+	var size int
+	hm.findBasinSize((*lowPoints)[idx], isInABasin, &size)
+	(*basins)[idx] = size
+
+	hm.threeLargestBasins(idx+1, lowPoints, basins, isInABasin)
+}
+
+func (hm *HeightMap) findBasinSize(targetIxd int, isInABasin *[]bool, size *int) {
+	target := hm.values[targetIxd]
+
+	if target >= 9 || (*isInABasin)[targetIxd] {
+		return
+	}
+
+	(*isInABasin)[targetIxd] = true
+	*size += 1
+
+	x, y := xyFromIdx(targetIxd, hm.Width)
+
+	if x > 0 {
+		hm.findBasinSize(y*hm.Width+x-1, isInABasin, size)
+	}
+	if y > 0 {
+		hm.findBasinSize((y-1)*hm.Width+x, isInABasin, size)
+	}
+	if x < hm.Width-1 {
+		hm.findBasinSize(y*hm.Width+x+1, isInABasin, size)
+	}
+	if y < hm.Height-1 {
+		hm.findBasinSize((y+1)*hm.Width+x, isInABasin, size)
+	}
 }
 
 func parseInput(reader *bufio.Reader) (*HeightMap, error) {
