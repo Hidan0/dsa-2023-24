@@ -149,6 +149,30 @@ func (e *EnergyLevel) flash(idx int, toFlash *[]int, flashed *[]bool, totalFlash
 	e.flash(idx+1, toFlash, flashed, totalFlashed)
 }
 
+func (e *EnergyLevel) isSync() bool {
+	for _, value := range e.values {
+		if value > 0 {
+			return false
+		}
+	}
+	return true
+}
+
+func (e *EnergyLevel) Sync() int {
+	const MAX_ITERATIONS = 1000
+
+	i := 0
+	for !e.isSync() && i < MAX_ITERATIONS {
+		e.NextStep()
+		i++
+	}
+
+	if i == MAX_ITERATIONS {
+		return -1
+	}
+	return i
+}
+
 func main() {
 	f, err := os.Open("input.txt")
 	if err != nil {
@@ -158,6 +182,12 @@ func main() {
 	defer f.Close()
 
 	e, err := parseInput(bufio.NewReader(f))
-	res := e.Advance(100)
-	fmt.Println(res)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	// res := e.Advance(100)
+	// fmt.Println(res)
+	//
+	fmt.Println(e.Sync())
 }
