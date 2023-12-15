@@ -57,3 +57,24 @@ func (lst *LinkedList) Search(value int) bool {
 
 	return curr != nil
 }
+
+func (lst *LinkedList) Remove(value int) bool {
+	curr := lst.head
+	var prev *node = nil
+
+	for curr != nil && curr.value != value {
+		prev = curr
+		curr = curr.next
+	}
+
+	if curr == nil {
+		return false
+	}
+
+	if prev == nil {
+		lst.head = curr.next
+	} else {
+		prev.next = curr.next
+	}
+	return true
+}
