@@ -48,3 +48,12 @@ func (lst *LinkedList) Print() string {
 
 	return sb.String()
 }
+
+func (lst *LinkedList) Search(value int) bool {
+	curr := lst.head
+	for curr != nil && curr.value != value {
+		curr = curr.next
+	}
+
+	return curr != nil
+}
