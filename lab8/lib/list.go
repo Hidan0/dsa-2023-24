@@ -49,6 +49,40 @@ func (lst *LinkedList) Print() string {
 	return sb.String()
 }
 
+func (lst *LinkedList) Size() int {
+	if lst == nil {
+		return 0
+	}
+
+	out := 0
+	curr := lst.head
+	for curr != nil {
+		out += 1
+		curr = curr.next
+	}
+	return out
+}
+
+func (lst *LinkedList) Drop() {
+	lst.head = nil
+}
+
+func (lst *LinkedList) PrintReversed() {
+	l := lst.head
+
+	fmt.Print("[ ")
+	lst.printReversed(l)
+	fmt.Println("]")
+}
+
+func (lst *LinkedList) printReversed(l *node) {
+	if l == nil {
+		return
+	}
+	lst.printReversed(l.next)
+	fmt.Printf("%d ", l.value)
+}
+
 func (lst *LinkedList) Search(value int) bool {
 	curr := lst.head
 	for curr != nil && curr.value != value {

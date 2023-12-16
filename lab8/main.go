@@ -1,30 +1,72 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"lab8/lib"
+	"os"
+	"strconv"
+	"strings"
 )
 
 func main() {
 	lst := new(lib.LinkedList)
-	fmt.Println("Search 2 ", lst.Search(2))
-	lst.PushNode(1)
-	fmt.Println(lst.Print())
-	fmt.Println("Search 2 ", lst.Search(2))
-	lst.PushNode(2)
-	lst.PushNode(3)
-	lst.PushNode(4)
-	lst.PushNode(50)
-	lst.PushNode(25)
-	fmt.Println(lst.Print())
+	f, err := os.Open("in.txt")
+	if err != nil {
+		fmt.Println("Error opening file")
+	}
+	defer f.Close()
 
-	fmt.Println("Search 25 ", lst.Search(25))
-	fmt.Println("Search 1 ", lst.Search(1))
-	fmt.Println("Search 3 ", lst.Search(3))
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		line := scanner.Text()
 
-	fmt.Println("Remove -1 ", lst.Remove(-1))
-	fmt.Println("Remove 1 ", lst.Remove(1))
-	fmt.Println("Remove 3 ", lst.Remove(3))
-	fmt.Println("Remove 25 ", lst.Remove(25))
-	fmt.Println("Remove 25 ", lst.Remove(25))
+		strs := strings.Split(line, " ")
+		if len(strs) == 2 {
+			val, _ := strconv.Atoi(strs[1])
+			switch strs[0] {
+			case "+":
+				insertIfNotExists(lst, val)
+			case "-":
+				removeIfExists(lst, val)
+			case "?":
+				if lst.Search(val) {
+					fmt.Println("Found ", val)
+				} else {
+					fmt.Println("Not found ", val)
+				}
+			default:
+				fmt.Println("Invalid command", strs[0])
+			}
+		} else {
+			switch strs[0] {
+			case "c":
+				fmt.Println("Size:", lst.Size())
+			case "p":
+				fmt.Println(lst.Print())
+			case "o":
+				lst.PrintReversed()
+			case "d":
+				lst.Drop()
+				fmt.Println("Dropped")
+			case "f":
+				return
+			default:
+				fmt.Println("Invalid command", strs[0])
+			}
+		}
+	}
+}
+
+func insertIfNotExists(lst *lib.LinkedList, value int) {
+	if !lst.Search(value) {
+		lst.PushNode(value)
+		fmt.Println("*** Inserted ", value)
+	}
+}
+
+func removeIfExists(lst *lib.LinkedList, value int) {
+	if lst.Remove(value) {
+		fmt.Println("*** Removed ", value)
+	}
 }
