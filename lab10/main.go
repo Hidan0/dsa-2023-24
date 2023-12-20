@@ -23,15 +23,17 @@ func main() {
 		line := scanner.Text()
 		tmp := strings.Split(line, ",")
 		expected := tmp[1]
-		res := evaluate(tmp[0])
 
-		fmt.Printf("[evaluate(\"%s\")] expected: %s, Got: %d\n", tmp[0], expected, res)
+		postFix := fromInfixToPostfix(tmp[0])
+		res := evaluate(postFix)
+
+		fmt.Printf("[\"%s\"] => [evaluate(\"%s\")] expected: %s, Got: %d\n", tmp[0], postFix, expected, res)
 	}
 }
 
 func evaluate(expr string) int {
 	stack := stack.NewStack()
-	tokens := strings.Split(expr, " ")
+	tokens := strings.Split(strings.TrimSpace(expr), " ")
 	for _, token := range tokens {
 		n, err := strconv.Atoi(token)
 		if err == nil {
@@ -62,4 +64,34 @@ func evaluate(expr string) int {
 	}
 
 	return stack.Pop()
+}
+
+func fromInfixToPostfix(expr string) string {
+	stack := stack.NewSStack()
+	tokens := strings.Split(strings.TrimSpace(expr), " ")
+	sb := strings.Builder{}
+
+	for _, token := range tokens {
+		_, err := strconv.Atoi(token)
+		if err == nil {
+			sb.WriteString(token)
+			sb.WriteString(" ")
+			continue
+		}
+
+		switch token {
+		case "(":
+			continue
+		case ")":
+			sb.WriteString(stack.Pop())
+			sb.WriteString(" ")
+		case "+", "-", "*", "/":
+			stack.Push(token)
+		default:
+			fmt.Println("Invalid token", token)
+			return ""
+		}
+	}
+
+	return sb.String()
 }

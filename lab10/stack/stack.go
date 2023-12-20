@@ -48,3 +48,21 @@ func (l *Stack) Pop() int {
 
 	return popped.val
 }
+
+type SliceStack struct {
+	data []string
+}
+
+func NewSStack() *SliceStack {
+	return &SliceStack{}
+}
+
+func (s *SliceStack) Push(val string) {
+	s.data = append(s.data, val)
+}
+
+func (s *SliceStack) Pop() string {
+	out := s.data[len(s.data)-1]
+	s.data = s.data[:len(s.data)-1]
+	return out
+}
