@@ -19,32 +19,32 @@ func NewStack() *Stack {
 	return &Stack{nil, nil}
 }
 
-func (l *Stack) Push(val int) {
+func (s *Stack) Push(val int) {
 	n := newNode(val)
-	if l.head == nil {
-		l.head = n
-		l.tail = n
+	if s.head == nil {
+		s.head = n
+		s.tail = n
 		return
 	}
 
-	l.tail.next = n
-	n.prev = l.tail
-	l.tail = n
+	s.tail.next = n
+	n.prev = s.tail
+	s.tail = n
 }
 
-func (l *Stack) Pop() int {
-	popped := l.tail
+func (s *Stack) Pop() int {
+	popped := s.tail
 
 	last := popped.prev
 
 	if last == nil {
-		l.head = nil
-		l.tail = nil
+		s.head = nil
+		s.tail = nil
 		return popped.val
 	}
 
 	last.next = nil
-	l.tail = last
+	s.tail = last
 
 	return popped.val
 }
