@@ -71,6 +71,31 @@ func (bt *BTree[T]) postorder() string {
 	return sb.String()
 }
 
+func (btn *bTreeNode[T]) _printSummary(spaces int, sb *strings.Builder) {
+	// modified pre-order traversal
+	if btn == nil {
+		return
+	}
+
+	sb.WriteString(strings.Repeat(" ", spaces))
+	sb.WriteString(fmt.Sprintf("*%v\n", btn.val))
+
+	if btn.left == nil && btn.right != nil {
+		sb.WriteString(strings.Repeat(" ", spaces+2) + "*\n")
+	}
+	btn.left._printSummary(spaces+2, sb)
+	if btn.right == nil && btn.left != nil {
+		sb.WriteString(strings.Repeat(" ", spaces+2) + "*\n")
+	}
+	btn.right._printSummary(spaces+2, sb)
+}
+
+func (bt *BTree[T]) printSummary() string {
+	sb := strings.Builder{}
+	bt.root._printSummary(0, &sb)
+	return sb.String()
+}
+
 func main() {
 	bt := newBTree[int]()
 	bt.root = newBTNode(78)
@@ -88,4 +113,5 @@ func main() {
 	fmt.Println("[INORDER]: ", bt.inorder())
 	fmt.Println("[PREORDER]: ", bt.preorder())
 	fmt.Println("[POSTORDER]: ", bt.postorder())
+	fmt.Print("[SUMMARY]:\n", bt.printSummary())
 }
