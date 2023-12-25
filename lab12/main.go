@@ -72,7 +72,6 @@ func (bt *BTree[T]) postorder() string {
 }
 
 func (btn *bTreeNode[T]) _printSummary(spaces int, sb *strings.Builder) {
-	// modified pre-order traversal
 	if btn == nil {
 		return
 	}
@@ -96,6 +95,34 @@ func (bt *BTree[T]) printSummary() string {
 	return sb.String()
 }
 
+// Ex 1.2
+func stampaAlberoASommario[T any](node *bTreeNode[T], spaces int) {
+	if node == nil {
+		return
+	}
+
+	for i := 0; i < spaces; i++ {
+		fmt.Print(" ")
+	}
+	fmt.Print("*")
+	fmt.Println(node.val)
+
+	if node.left == nil && node.right != nil {
+		for i := 0; i < spaces+2; i++ {
+			fmt.Print(" ")
+		}
+		fmt.Println("*")
+	}
+	stampaAlberoASommario(node.left, spaces+2)
+	if node.right == nil && node.left != nil {
+		for i := 0; i < spaces+2; i++ {
+			fmt.Print(" ")
+		}
+		fmt.Println("*")
+	}
+	stampaAlberoASommario(node.right, spaces+2)
+}
+
 func main() {
 	bt := newBTree[int]()
 	bt.root = newBTNode(78)
@@ -114,4 +141,6 @@ func main() {
 	fmt.Println("[PREORDER]: ", bt.preorder())
 	fmt.Println("[POSTORDER]: ", bt.postorder())
 	fmt.Print("[SUMMARY]:\n", bt.printSummary())
+
+	stampaAlberoASommario(bt.root, 0)
 }
