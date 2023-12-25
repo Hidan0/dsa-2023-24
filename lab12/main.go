@@ -123,6 +123,17 @@ func stampaAlberoASommario[T any](node *bTreeNode[T], spaces int) {
 	stampaAlberoASommario(node.right, spaces+2)
 }
 
+func arr2tree(a []int, i int) (root *bTreeNode[int]) {
+	if i > len(a)-1 {
+		return nil
+	}
+
+	root = newBTNode(a[i])
+	root.left = arr2tree(a, 2*i+1)
+	root.right = arr2tree(a, 2*i+2)
+	return root
+}
+
 func main() {
 	bt := newBTree[int]()
 	bt.root = newBTNode(78)
@@ -143,4 +154,7 @@ func main() {
 	fmt.Print("[SUMMARY]:\n", bt.printSummary())
 
 	stampaAlberoASommario(bt.root, 0)
+	a := []int{69, 89, 28, 39, 66, 44, 12, 2, 71}
+	intTree := &BTree[int]{arr2tree(a, 0)}
+	fmt.Println(intTree.inorder())
 }
